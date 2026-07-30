@@ -1,13 +1,23 @@
 import { Music, Mic2, ArrowRight } from "lucide-react";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
+import { AuthContextData } from "../context/AuthContext";
 
 export default function Register() {
+
+    const { registerUser } = useContext(AuthContextData)
+
     const [role, setRole] = useState('listener')
     const { register, reset, handleSubmit, formState: { errors } } = useForm();
 
     const submitHandler = (data) => {
         console.log(data);
+        const response = registerUser(data);
+        if (!response.success) {
+            alert(response.message);
+            return;
+        }
+        alert(response.message);
         reset();
 
     }
@@ -36,7 +46,7 @@ export default function Register() {
                             type="button"
                             className={`${role === 'listener' ? 'border-[#5d4bab] shadow-[0_0_0_1px_rgba(139,108,241,0.35),0_0_24px_-6px_rgba(139,108,241,0.55)]' : `border-[#5d4bab]`} flex flex-col items-center gap-1.5 rounded-xl border  px-2 py-3.5 text-xs font-semibold uppercase tracking-widest text-white  active:scale-95`}
                         >
-                            <Music size={18} className={`${role==='listener'?'text-[#8b6cf1]':'opacity-65'}`} />
+                            <Music size={18} className={`${role === 'listener' ? 'text-[#8b6cf1]' : 'opacity-65'}`} />
                             Listener
                         </button>
                         <button
@@ -44,7 +54,7 @@ export default function Register() {
                             type="button"
                             className={`${role === 'artist' ? 'border-[#5d4bab] shadow-[0_0_0_1px_rgba(139,108,241,0.35),0_0_24px_-6px_rgba(139,108,241,0.55)]' : `border-[#5d4bab]`} flex flex-col items-center gap-1.5 rounded-xl border  px-2 py-3.5 text-xs font-semibold uppercase tracking-widest text-white  active:scale-95`}
                         >
-                            <Mic2 size={18} className={`${role==='artist'?'text-[#8b6cf1]':'opacity-65'}`} />
+                            <Mic2 size={18} className={`${role === 'artist' ? 'text-[#8b6cf1]' : 'opacity-65'}`} />
                             Artist
                         </button>
                         <input {...register('role')} value={role} type="hidden" />
