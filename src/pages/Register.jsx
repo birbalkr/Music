@@ -1,8 +1,19 @@
 import { Music, Mic2, ArrowRight } from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 export default function Register() {
+    const [role, setRole] = useState('listener')
+    const { register, reset, handleSubmit, formState: { errors } } = useForm();
+
+    const submitHandler = (data) => {
+        console.log(data);
+        reset();
+
+    }
+
     return (
-        <div className="min-h-screen w-full flex items-center justify-center bg-[#0a0a10] px-5 py-12">
+        <div className="min-h-screen w-full flex items-center justify-center bg-[#0a0a10] px-5 py-12" >
             <div className="w-full max-w-[420px]">
                 <div className="text-center mb-7">
                     <h1
@@ -16,44 +27,78 @@ export default function Register() {
                     </p>
                 </div>
 
-                <div className="h-14 flex items-center justify-center gap-[3px] mb-7">
-                    {[18, 30, 14, 40, 22, 34, 16, 28, 44, 20, 32, 12, 38, 24, 30, 16, 42, 20, 28, 14, 36, 22, 18, 32, 26, 40, 16, 24].map(
-                        (h, i) => (
-                            <span
-                                key={i}
-                                className="wave-bar w-[3px] rounded-sm"
-                                style={{ height: `${h}px`, background: "linear-gradient(180deg, #8b6cf1, #3ee6b8)" }}
-                            />
-                        )
-                    )}
-                </div>
-
-                <form className="rounded-[20px] border border-white/[0.08] bg-[#15141d] p-6 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.6)]">
+                <form
+                    onSubmit={handleSubmit(submitHandler)}
+                    className="rounded-[20px] border border-white/[0.08] bg-[#15141d] p-6 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.6)]">
                     <div className="grid grid-cols-2 gap-2.5 mb-5">
                         <button
+                            onClick={() => setRole('listener')}
                             type="button"
-                            className="flex flex-col items-center gap-1.5 rounded-xl border border-[#5d4bab] px-2 py-3.5 text-xs font-semibold uppercase tracking-widest text-white shadow-[0_0_0_1px_rgba(139,108,241,0.35),0_0_24px_-6px_rgba(139,108,241,0.55)]"
-                            style={{ background: "linear-gradient(160deg, rgba(139,108,241,0.16), rgba(139,108,241,0.03))" }}
+                            className={`${role === 'listener' ? 'border-[#5d4bab] shadow-[0_0_0_1px_rgba(139,108,241,0.35),0_0_24px_-6px_rgba(139,108,241,0.55)]' : `border-[#5d4bab]`} flex flex-col items-center gap-1.5 rounded-xl border  px-2 py-3.5 text-xs font-semibold uppercase tracking-widest text-white  active:scale-95`}
                         >
-                            <Music size={18} className="text-[#8b6cf1]" />
+                            <Music size={18} className={`${role==='listener'?'text-[#8b6cf1]':'opacity-65'}`} />
                             Listener
                         </button>
                         <button
+                            onClick={() => setRole('artist')}
                             type="button"
-                            className="flex flex-col items-center gap-1.5 rounded-xl border border-white/[0.08] bg-[#100f16] px-2 py-3.5 text-xs font-semibold uppercase tracking-widest text-[#8a879a]"
+                            className={`${role === 'artist' ? 'border-[#5d4bab] shadow-[0_0_0_1px_rgba(139,108,241,0.35),0_0_24px_-6px_rgba(139,108,241,0.55)]' : `border-[#5d4bab]`} flex flex-col items-center gap-1.5 rounded-xl border  px-2 py-3.5 text-xs font-semibold uppercase tracking-widest text-white  active:scale-95`}
                         >
-                            <Mic2 size={18} className="opacity-65" />
+                            <Mic2 size={18} className={`${role==='artist'?'text-[#8b6cf1]':'opacity-65'}`} />
                             Artist
                         </button>
+                        <input {...register('role')} value={role} type="hidden" />
                     </div>
 
-                    <Field label="Full name" placeholder="Alex Rivera" />
-                    <Field label="Username" placeholder="alexr" />
-                    <Field label="Email address" type="email" placeholder="name@example.com" />
+                    <div className="mb-3">
+                        <label className="mb-1.5 block text-xs text-[#8a879a]">Full name</label>
+                        <input
+                            {...register("fullName", { required: true })}
+                            type="text"
+                            placeholder="Alex Rivera"
+                            className="w-full rounded-[10px] border border-white/[0.08] bg-[#100f16] px-3.5 py-3 text-sm text-[#f2f0f7] outline-none placeholder:text-[#57536a] focus:border-[#5d4bab] focus:ring-[3px] focus:ring-[#8b6cf1]/[0.16]"
+                        />
+                    </div>
+
+                    <div className="mb-3">
+                        <label className="mb-1.5 block text-xs text-[#8a879a]">Username</label>
+                        <input
+                            {...register("username", { required: true })}
+                            type="text"
+                            placeholder="alexr"
+                            className="w-full rounded-[10px] border border-white/[0.08] bg-[#100f16] px-3.5 py-3 text-sm text-[#f2f0f7] outline-none placeholder:text-[#57536a] focus:border-[#5d4bab] focus:ring-[3px] focus:ring-[#8b6cf1]/[0.16]"
+                        />
+                    </div>
+
+                    <div className="mb-3">
+                        <label className="mb-1.5 block text-xs text-[#8a879a]">Email address</label>
+                        <input
+                            {...register("email", { required: true })}
+                            type="email"
+                            placeholder="name@example.com"
+                            className="w-full rounded-[10px] border border-white/[0.08] bg-[#100f16] px-3.5 py-3 text-sm text-[#f2f0f7] outline-none placeholder:text-[#57536a] focus:border-[#5d4bab] focus:ring-[3px] focus:ring-[#8b6cf1]/[0.16]"
+                        />
+                    </div>
 
                     <div className="grid grid-cols-2 gap-3">
-                        <Field label="Password" type="password" placeholder="••••••••" />
-                        <Field label="Confirm" type="password" placeholder="••••••••" />
+                        <div className="mb-3">
+                            <label className="mb-1.5 block text-xs text-[#8a879a]">Password</label>
+                            <input
+                                {...register("password", { required: true })}
+                                type="password"
+                                placeholder="••••••••"
+                                className="w-full rounded-[10px] border border-white/[0.08] bg-[#100f16] px-3.5 py-3 text-sm text-[#f2f0f7] outline-none placeholder:text-[#57536a] focus:border-[#5d4bab] focus:ring-[3px] focus:ring-[#8b6cf1]/[0.16]"
+                            />
+                        </div>
+                        <div className="mb-3">
+                            <label className="mb-1.5 block text-xs text-[#8a879a]">Confirm</label>
+                            <input
+                                {...register("confirmPassword", { required: true })}
+                                type="password"
+                                placeholder="••••••••"
+                                className="w-full rounded-[10px] border border-white/[0.08] bg-[#100f16] px-3.5 py-3 text-sm text-[#f2f0f7] outline-none placeholder:text-[#57536a] focus:border-[#5d4bab] focus:ring-[3px] focus:ring-[#8b6cf1]/[0.16]"
+                            />
+                        </div>
                     </div>
 
                     <button
@@ -76,19 +121,6 @@ export default function Register() {
                     </p>
                 </form>
             </div>
-        </div>
-    );
-}
-
-function Field({ label, placeholder, type = "text" }) {
-    return (
-        <div className="mb-3">
-            <label className="mb-1.5 block text-xs text-[#8a879a]">{label}</label>
-            <input
-                type={type}
-                placeholder={placeholder}
-                className="w-full rounded-[10px] border border-white/[0.08] bg-[#100f16] px-3.5 py-3 text-sm text-[#f2f0f7] outline-none placeholder:text-[#57536a] focus:border-[#5d4bab] focus:ring-[3px] focus:ring-[#8b6cf1]/[0.16]"
-            />
         </div>
     );
 }
