@@ -8,8 +8,9 @@ export default function Register() {
     const { registerUser } = useContext(AuthContextData)
 
     const [role, setRole] = useState('listener')
-    const { register, reset, handleSubmit, formState: { errors } } = useForm();
+    const { register, reset, handleSubmit, formState: { errors }, watch } = useForm();
 
+    const password = watch("password");
     const submitHandler = (data) => {
         console.log(data);
         const response = registerUser(data);
@@ -68,6 +69,7 @@ export default function Register() {
                             placeholder="Alex Rivera"
                             className="w-full rounded-[10px] border border-white/[0.08] bg-[#100f16] px-3.5 py-3 text-sm text-[#f2f0f7] outline-none placeholder:text-[#57536a] focus:border-[#5d4bab] focus:ring-[3px] focus:ring-[#8b6cf1]/[0.16]"
                         />
+                        {errors.fullName && <span className="text-red-500 text-xs">Full name is required</span>}
                     </div>
 
                     <div className="mb-3">
@@ -78,6 +80,7 @@ export default function Register() {
                             placeholder="alexr"
                             className="w-full rounded-[10px] border border-white/[0.08] bg-[#100f16] px-3.5 py-3 text-sm text-[#f2f0f7] outline-none placeholder:text-[#57536a] focus:border-[#5d4bab] focus:ring-[3px] focus:ring-[#8b6cf1]/[0.16]"
                         />
+                        {errors.username && <span className="text-red-500 text-xs">Username is required</span>}
                     </div>
 
                     <div className="mb-3">
@@ -88,26 +91,52 @@ export default function Register() {
                             placeholder="name@example.com"
                             className="w-full rounded-[10px] border border-white/[0.08] bg-[#100f16] px-3.5 py-3 text-sm text-[#f2f0f7] outline-none placeholder:text-[#57536a] focus:border-[#5d4bab] focus:ring-[3px] focus:ring-[#8b6cf1]/[0.16]"
                         />
+                        {errors.email && <span className="text-red-500 text-xs">Email is required</span>}
                     </div>
 
                     <div className="grid grid-cols-2 gap-3">
                         <div className="mb-3">
                             <label className="mb-1.5 block text-xs text-[#8a879a]">Password</label>
                             <input
-                                {...register("password", { required: true })}
+                                {...register("password", {
+                                    required: "Password is required",
+                                    minLength: {
+                                        value: 6,
+                                        message: "Password must be at least 6 characters",
+                                    }
+                                })}
                                 type="password"
                                 placeholder="••••••••"
                                 className="w-full rounded-[10px] border border-white/[0.08] bg-[#100f16] px-3.5 py-3 text-sm text-[#f2f0f7] outline-none placeholder:text-[#57536a] focus:border-[#5d4bab] focus:ring-[3px] focus:ring-[#8b6cf1]/[0.16]"
                             />
+                            {errors.password && (
+                                <span className="text-red-500 text-xs">
+                                    {errors.password.message}
+                                </span>
+                            )}
                         </div>
                         <div className="mb-3">
                             <label className="mb-1.5 block text-xs text-[#8a879a]">Confirm</label>
                             <input
-                                {...register("confirmPassword", { required: true })}
+                                {...register("confirmPassword", {
+                                    required: "Password is required",
+                                    minLength: {
+                                        value: 6,
+                                        message: "Password must be at least 6 characters",
+                                    },
+                                    validate: (value) =>
+                                        value === password || "Passwords do not match",
+
+                                })}
                                 type="password"
                                 placeholder="••••••••"
                                 className="w-full rounded-[10px] border border-white/[0.08] bg-[#100f16] px-3.5 py-3 text-sm text-[#f2f0f7] outline-none placeholder:text-[#57536a] focus:border-[#5d4bab] focus:ring-[3px] focus:ring-[#8b6cf1]/[0.16]"
                             />
+                            {errors.confirmPassword && (
+                                <span className="text-red-500 text-xs">
+                                    {errors.confirmPassword.message}
+                                </span>
+                            )}
                         </div>
                     </div>
 
